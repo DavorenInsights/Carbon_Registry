@@ -6,225 +6,245 @@
 # - Safe navigation via st.switch_page
 # ------------------------------------------------------------
 
+
 import streamlit as st
 
-# -----------------------------
-# CONFIG
-# -----------------------------
-APP_TITLE = "Carbon Registry"
-APP_ICON = "🌍"
-APP_VERSION = "v1.0 (foundation beta)"
-APP_TAGLINE = "Boundaries → Assumptions → Calculators → Evidence"
-
-NAV_ITEMS = [
-    {
-        "card_title": "⚖️ Carbon Registry",
-        "desc": "Create projects, log activities, and capture boundaries + assumptions.",
-        "button": "Open Carbon Registry",
-        "page": "pages/1_Registry.py",
-        "badge": "Core",
-    },
-    {
-        "card_title": "📊 Scope 1 / 2 / 3 Calculator",
-        "desc": "Baseline estimates across scopes with transparent factors + assumptions.",
-        "button": "Open Scope Calculator",
-        "page": "pages/2_Scope_Calculator.py",
-        "badge": "Core",
-    },
-    {
-        "card_title": "📘 Methodology Tools",
-        "desc": "Verra-aligned worked examples (demo-style): VM0038, AM0124, VMR0007.",
-        "button": "Open Methodology Examples",
-        "page": "pages/3_📘_Methodologies.py",  # keep exactly as your filename
-        "badge": "Beta",
-    },
-]
-
-# -----------------------------
-# PAGE CONFIG (must be first)
-# -----------------------------
-st.set_page_config(page_title=APP_TITLE, page_icon=APP_ICON, layout="wide")
+# ------------------------------------------------------------
+# PAGE CONFIG (must be first Streamlit call)
+# ------------------------------------------------------------
+st.set_page_config(page_title="Carbon Registry • Methodologies", page_icon="📘", layout="wide")
 
 
-# -----------------------------
-# THEME (embedded CSS)
-# -----------------------------
-def inject_css() -> None:
-    css = r"""
-:root{
-  --bg:#020c08;
-  --panel: rgba(10,25,15,.45);
-  --panel2: rgba(10,25,15,.60);
-  --stroke: rgba(57,255,159,.20);
+# ------------------------------------------------------------
+# EMBEDDED CSS (full)
+# ------------------------------------------------------------
+EMBEDDED_CSS = r"""
+/* ============================================================
+   GLOBAL VARIABLES
+============================================================ */
+:root {
+    --bg-dark: #020c08;
+    --bg-card: rgba(10, 25, 15, 0.55);
+    --bg-card-strong: rgba(10, 25, 15, 0.85);
 
-  --neon:#39ff9f;
-  --mid:#00b46f;
-  --soft:#86ffcf;
+    --green-neon: #39ff9f;
+    --green-mid: #00b46f;
+    --green-soft: #86ffcf;
 
-  --text:#e8fff2;
-  --dim:#b3ffdd;
+    --text-light: #e8fff2;
+    --text-mid: #b3ffdd;
 
-  --r:18px;
-  --shadow: 0 0 20px rgba(0,255,138,.12);
-  --glow: 0 0 12px rgba(57,255,159,.35);
+    --border-glow: 0 0 12px rgba(57, 255, 159, 0.45);
+    --shadow-card: 0 0 20px rgba(0, 255, 138, 0.15);
+
+    --radius: 18px;
+    --transition: 0.25s ease-in-out;
 }
 
-html, body, .stApp{
-  background: var(--bg) !important;
-  color: var(--text) !important;
-  font-family: "Segoe UI", Roboto, sans-serif !important;
+/* ============================================================
+   RESET / BASE
+============================================================ */
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: var(--bg-dark) !important;
+    font-family: "Segoe UI", Roboto, sans-serif;
+    color: var(--text-light);
+}
+
+h1, h2, h3, h4 {
+    color: var(--green-soft) !important;
+    letter-spacing: 0.6px;
+    text-shadow: 0 0 8px rgba(57, 255, 159, 0.25);
+}
+
+p, label, span, div {
+    color: var(--text-mid) !important;
+}
+
+/* ============================================================
+   STREAMLIT OVERRIDES
+============================================================ */
+.stApp {
+    background: var(--bg-dark) !important;
 }
 
 /* Sidebar */
-section[data-testid="stSidebar"]{
-  background: rgba(5,20,10,.90) !important;
-  backdrop-filter: blur(12px);
-  border-right: 1px solid rgba(57,255,159,.12);
-  box-shadow: 4px 0 20px rgba(0,255,138,.08);
+section[data-testid="stSidebar"] {
+    background: rgba(5, 20, 10, 0.9) !important;
+    backdrop-filter: blur(12px);
+    border-right: 1px solid rgba(57, 255, 159, 0.15);
+    box-shadow: 4px 0 20px rgba(0, 255, 138, 0.08);
 }
-section[data-testid="stSidebar"] *{ color: var(--dim) !important; }
+
 section[data-testid="stSidebar"] h1,
 section[data-testid="stSidebar"] h2,
-section[data-testid="stSidebar"] h3{ color: var(--soft) !important; }
-
-/* Buttons */
-.stButton>button,
-button[kind="primary"],
-.stDownloadButton button{
-  background: var(--mid) !important;
-  color: #00120a !important;
-  border: none !important;
-  font-weight: 700 !important;
-  border-radius: var(--r) !important;
-  box-shadow: var(--glow) !important;
-  transition: .18s ease-in-out !important;
+section[data-testid="stSidebar"] h3 {
+    color: var(--green-soft) !important;
 }
-.stButton>button:hover,
+
+/* Sidebar buttons */
+.stButton>button {
+    background: var(--green-mid) !important;
+    color: black !important;
+    font-weight: 600;
+    border-radius: var(--radius);
+    border: none;
+    box-shadow: var(--border-glow);
+    transition: var(--transition);
+}
+
+.stButton>button:hover {
+    background: var(--green-neon) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 0 18px rgba(57, 255, 159, 0.8);
+}
+
+/* ============================================================
+   CARDS / CONTAINERS
+============================================================ */
+.im-card, .stContainer, .stMarkdown {
+    background: var(--bg-card) !important;
+    padding: 18px 22px !important;
+    border-radius: var(--radius);
+    border: 1px solid rgba(57, 255, 159, 0.2);
+    box-shadow: var(--shadow-card);
+    backdrop-filter: blur(40px) saturate(120%);
+}
+
+/* General input styling */
+input, textarea, select {
+    background: rgba(5, 20, 10, 0.5) !important;
+    border: 1px solid rgba(57, 255, 159, 0.25) !important;
+    border-radius: var(--radius) !important;
+    color: var(--text-light) !important;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: var(--green-neon) !important;
+    box-shadow: var(--border-glow);
+}
+
+/* Metric outputs */
+.stSuccess, .stAlert {
+    border-left: 4px solid var(--green-neon) !important;
+    background: rgba(0, 255, 138, 0.08) !important;
+    color: var(--green-soft) !important;
+}
+
+/* ============================================================
+   GLOW SEPARATORS
+============================================================ */
+hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        rgba(57, 255, 159, 0) 0%,
+        rgba(57, 255, 159, 0.6) 50%,
+        rgba(57, 255, 159, 0) 100%
+    );
+    margin: 25px 0;
+}
+
+/* ============================================================
+   CUSTOM UTILITY CLASSES
+============================================================ */
+.green-glow {
+    text-shadow: 0 0 12px var(--green-neon);
+    color: var(--green-neon) !important;
+    font-weight: 700;
+}
+
+.card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 20px;
+    border: 1px solid rgba(57, 255, 159, 0.25);
+    box-shadow: var(--shadow-card);
+    backdrop-filter: blur(14px);
+}
+
+.glass-box {
+    border-radius: var(--radius);
+    background: rgba(10, 25, 15, 0.45);
+    border: 1px solid rgba(57, 255, 159, 0.25);
+    padding: 25px;
+    box-shadow: var(--shadow-card);
+    backdrop-filter: blur(30px);
+}
+
+/* ============================================================
+   EXPANDERS
+============================================================ */
+.streamlit-expanderHeader {
+    background: rgba(10, 30, 15, 0.6) !important;
+    color: var(--green-soft) !important;
+    border-radius: var(--radius) !important;
+}
+
+/* ============================================================
+   TABLES
+============================================================ */
+tbody, thead, tr, th, td {
+    color: var(--text-light) !important;
+    background: rgba(10, 30, 15, 0.25) !important;
+    border-color: rgba(57, 255, 159, 0.2) !important;
+}
+
+/* ============================================================
+   SUCCESS, WARNING, INFO TEXT
+============================================================ */
+.stSuccess, .stWarning, .stInfo, .stError {
+    padding: 12px 18px !important;
+    border-radius: var(--radius) !important;
+    border-left: 4px solid var(--green-neon) !important;
+}
+
+/* ============================================================
+   BUTTONS (global)
+============================================================ */
+button[kind="primary"], .stDownloadButton button {
+    background: var(--green-mid) !important;
+    color: black !important;
+    border-radius: var(--radius) !important;
+    border: none !important;
+    box-shadow: var(--border-glow) !important;
+    transition: var(--transition);
+    font-weight: 600 !important;
+}
+
 button[kind="primary"]:hover,
-.stDownloadButton button:hover{
-  background: var(--neon) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 0 18px rgba(57,255,159,.65) !important;
+.stDownloadButton button:hover {
+    background: var(--green-neon) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(57, 255, 159, 0.7) !important;
 }
 
-/* Inputs */
-[data-testid="stTextInput"] input,
-[data-testid="stNumberInput"] input,
-[data-testid="stTextArea"] textarea,
-[data-testid="stSelectbox"] div[role="combobox"],
-[data-testid="stMultiSelect"] div[role="combobox"]{
-  background: rgba(5,20,10,.55) !important;
-  color: var(--text) !important;
-  border: 1px solid rgba(57,255,159,.22) !important;
-  border-radius: var(--r) !important;
+/* ============================================================
+   FOOTER HIDE
+============================================================ */
+footer { visibility: hidden !important; }
+
+/* ============================================================
+   ALTAIR / VEGA EMBED BACKGROUND (dark-friendly)
+============================================================ */
+.vega-embed, .vega-embed details, .vega-embed summary {
+    background: rgba(10, 25, 15, 0.35) !important;
+    border: 1px solid rgba(57, 255, 159, 0.20) !important;
+    box-shadow: 0 0 20px rgba(0, 255, 138, 0.12) !important;
+    border-radius: 18px !important;
+    padding: 10px !important;
 }
 
-/* Widget labels */
-[data-testid="stWidgetLabel"] p{
-  color: var(--dim) !important;
-  font-weight: 600 !important;
-}
-
-/* Expanders */
-[data-testid="stExpander"]{
-  border: 1px solid rgba(57,255,159,.14) !important;
-  border-radius: var(--r) !important;
-  background: rgba(10,25,15,.22) !important;
-}
-[data-testid="stExpander"] summary{
-  background: rgba(10,30,15,.55) !important;
-  border-radius: var(--r) !important;
-  border: 1px solid rgba(57,255,159,.14) !important;
-}
-[data-testid="stExpander"] summary *{ color: var(--soft) !important; }
-
-/* Dataframes */
-[data-testid="stDataFrame"]{
-  background: rgba(10,25,15,.25) !important;
-  border: 1px solid rgba(57,255,159,.14) !important;
-  border-radius: var(--r) !important;
-  box-shadow: var(--shadow) !important;
-  overflow: hidden;
-}
-[data-testid="stDataFrame"] *{ color: var(--text) !important; }
-
-/* Alerts */
-.stAlert{
-  border-radius: var(--r) !important;
-  border: 1px solid rgba(57,255,159,.14) !important;
-  background: rgba(0,255,138,.07) !important;
-}
-.stSuccess, .stInfo, .stWarning, .stError{
-  border-left: 4px solid var(--neon) !important;
-}
-
-/* HR */
-hr{
-  border: none;
-  height: 1px;
-  background: linear-gradient(90deg,
-    rgba(57,255,159,0) 0%,
-    rgba(57,255,159,.55) 50%,
-    rgba(57,255,159,0) 100%);
-  margin: 22px 0;
-}
-
-/* Custom cards */
-.di-card{
-  border-radius: var(--r);
-  background: var(--panel);
-  border: 1px solid var(--stroke);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(16px);
-  padding: 22px;
-}
-
-/* Hide Streamlit footer */
-footer{ visibility:hidden !important; }
+/* ============================================================
+   END OF FILE
+============================================================ */
 """
-    st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+st.markdown(f"<style>{EMBEDDED_CSS}</style>", unsafe_allow_html=True)
 
 
-# -----------------------------
-# HERO (embedded, inline-safe)
-# -----------------------------
-def render_hero(title: str, subtitle_html: str) -> None:
-    st.markdown(
-        f"""
-<div style="
-  border-radius:18px;
-  background: rgba(10,25,15,.45);
-  border: 1px solid rgba(57,255,159,.20);
-  box-shadow: 0 0 20px rgba(0,255,138,.12);
-  backdrop-filter: blur(16px);
-  padding: 26px 26px 14px 26px;
-  margin-bottom: 14px;
-">
-<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap;">
-<div style="min-width:260px;">
-<h1 style="margin:0; color:#86ffcf; text-shadow:0 0 10px #39ff9f;">{title}</h1>
-<p style="font-size:18px; margin:10px 0 0 0; color:#b3ffdd;">{subtitle_html}</p>
-<p style="font-size:14px; margin:10px 0 0 0; color:#b3ffdd; opacity:0.85;">
-Suggested flow: <b>{APP_TAGLINE}</b>
-</p>
-</div>
-
-<div style="
-border-radius:14px;
-border: 1px solid rgba(57,255,159,.18);
-background: rgba(2,12,8,.35);
-padding: 12px 14px;
-min-width:220px;
-    ">
-<div style="color:#86ffcf; font-weight:700; margin-bottom:6px;">Build status</div>
-<div style="color:#b3ffdd; font-size:13px;">Version: <b>{APP_VERSION}</b></div>
-<div style="color:#b3ffdd; font-size:13px; margin-top:4px;">Mode: Foundation beta</div>
-</div>
-</div>
-</div>
-""",
-        unsafe_allow_html=True,
-    )
+import streamlit as st
 
 
 # -----------------------------
