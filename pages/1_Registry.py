@@ -1,161 +1,4 @@
 import streamlit as st
-
-# ---------------------------------------------------------
-# Embedded theme (same as landing page)
-# ---------------------------------------------------------
-def inject_css() -> None:
-    css = r"""
-:root {
-    --bg-dark: #020c08;
-    --bg-card: rgba(10, 25, 15, 0.55);
-    --bg-card-strong: rgba(10, 25, 15, 0.85);
-
-    --green-neon: #39ff9f;
-    --green-mid: #00b46f;
-    --green-soft: #86ffcf;
-
-    --text-light: #e8fff2;
-    --text-mid: #b3ffdd;
-
-    --border-glow: 0 0 12px rgba(57, 255, 159, 0.45);
-    --shadow-card: 0 0 20px rgba(0, 255, 138, 0.15);
-
-    --radius: 18px;
-    --transition: 0.25s ease-in-out;
-}
-
-html, body {
-    margin: 0 !important;
-    padding: 0 !important;
-    background: var(--bg-dark) !important;
-    font-family: "Segoe UI", Roboto, sans-serif !important;
-    color: var(--text-light) !important;
-}
-
-.stApp { background: var(--bg-dark) !important; }
-
-h1, h2, h3, h4 {
-    color: var(--green-soft) !important;
-    letter-spacing: 0.6px;
-    text-shadow: 0 0 8px rgba(57, 255, 159, 0.25);
-}
-
-p, label, span, div { color: var(--text-mid) !important; }
-
-section[data-testid="stSidebar"] {
-    background: rgba(5, 20, 10, 0.9) !important;
-    backdrop-filter: blur(12px);
-    border-right: 1px solid rgba(57, 255, 159, 0.15);
-    box-shadow: 4px 0 20px rgba(0, 255, 138, 0.08);
-}
-
-.stButton > button,
-button[kind="primary"],
-.stDownloadButton button {
-    background: var(--green-mid) !important;
-    color: black !important;
-    font-weight: 700 !important;
-    border-radius: var(--radius) !important;
-    border: none !important;
-    box-shadow: var(--border-glow) !important;
-    transition: var(--transition) !important;
-}
-
-.stButton > button:hover,
-button[kind="primary"]:hover,
-.stDownloadButton button:hover {
-    background: var(--green-neon) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 0 20px rgba(57, 255, 159, 0.7) !important;
-}
-
-/* Do NOT style .stMarkdown as a card */
-
-.card, .glass-box {
-    border-radius: var(--radius);
-    border: 1px solid rgba(57, 255, 159, 0.25);
-    box-shadow: var(--shadow-card);
-    backdrop-filter: blur(30px);
-}
-
-.card { background: var(--bg-card); padding: 20px; }
-.glass-box { background: rgba(10, 25, 15, 0.45); padding: 25px; }
-
-input, textarea, select {
-    background: rgba(5, 20, 10, 0.5) !important;
-    border: 1px solid rgba(57, 255, 159, 0.25) !important;
-    border-radius: var(--radius) !important;
-    color: var(--text-light) !important;
-}
-
-input:focus, textarea:focus, select:focus {
-    border-color: var(--green-neon) !important;
-    box-shadow: var(--border-glow) !important;
-}
-
-.stSuccess, .stWarning, .stInfo, .stError {
-    padding: 12px 18px !important;
-    border-radius: var(--radius) !important;
-    border-left: 4px solid var(--green-neon) !important;
-    background: rgba(0, 255, 138, 0.08) !important;
-}
-
-div[data-testid="stExpander"] summary {
-    background: rgba(10, 30, 15, 0.6) !important;
-    color: var(--green-soft) !important;
-    border-radius: var(--radius) !important;
-    border: 1px solid rgba(57, 255, 159, 0.18) !important;
-}
-
-div[data-testid="stDataFrame"] * { color: var(--text-light) !important; }
-table, thead, tbody, tr, th, td {
-    background: rgba(10, 30, 15, 0.22) !important;
-    border-color: rgba(57, 255, 159, 0.18) !important;
-}
-
-hr {
-    border: none;
-    height: 1px;
-    background: linear-gradient(
-        90deg,
-        rgba(57, 255, 159, 0) 0%,
-        rgba(57, 255, 159, 0.6) 50%,
-        rgba(57, 255, 159, 0) 100%
-    );
-    margin: 25px 0;
-}
-
-footer { visibility: hidden !important; }
-"""
-    st.markdown(f"<style id='di-theme'>{css}</style>", unsafe_allow_html=True)
-
-
-def render_hero_inline(title: str, subtitle: str) -> None:
-    st.markdown(
-        f"""
-<div class="glass-box" style="padding: 26px 26px 14px 26px; margin-bottom: 14px;">
-<h1 style="margin:0; color:#86ffcf; text-shadow:0 0 10px #39ff9f;">{title}</h1>
-<p style="font-size:18px; margin-top:10px; color:#b3ffdd;">{subtitle}</p>
-</div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-
-# ------------------------------------------------------------
-# PAGE CONFIG
-# ------------------------------------------------------------
-st.set_page_config(page_title="Carbon Registry", page_icon="⚖️", layout="wide")
-inject_css()
-
-render_hero_inline(
-    "⚖️ Carbon Registry",
-    "Create projects, log activities, and capture boundaries + assumptions. (foundation beta)",
-)
-
-# ------------------------------------------------------------
-# Your original Registry code (UNCHANGED logic)
-# ------------------------------------------------------------
 import sqlite3
 import pandas as pd
 import json
@@ -163,6 +6,19 @@ import uuid
 from datetime import datetime, date
 from pathlib import Path
 from typing import Optional, Dict, Any, Tuple
+
+from utils.load_css import load_css
+
+# ------------------------------------------------------------
+# PAGE CONFIG
+# ------------------------------------------------------------
+from utils.ui import setup_page, render_hero
+setup_page(page_title="Carbon Registry • Registry")
+render_hero(
+    title="⚖️ Carbon Registry",
+    subtitle="Create projects, log activities, and capture boundaries + assumptions.",
+)
+
 
 # ------------------------------------------------------------
 # SETTINGS
@@ -217,6 +73,7 @@ def ensure_schema() -> None:
     );
     """)
 
+    # NEW: foundational layer (minimal but powerful)
     db_exec("""
     CREATE TABLE IF NOT EXISTS project_foundations (
         project_id TEXT PRIMARY KEY,
@@ -728,7 +585,7 @@ with tabs[0]:
         st.dataframe(dfp, use_container_width=True, hide_index=True)
 
 # ------------------------------------------------------------
-# TAB 2: CREDITS & SALES
+# TAB 2: CREDITS & SALES (optional tracking)
 # ------------------------------------------------------------
 with tabs[1]:
     st.subheader("💳 Credits & Sales (optional)")
