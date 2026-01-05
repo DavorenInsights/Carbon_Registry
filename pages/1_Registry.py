@@ -13,12 +13,18 @@ from utils.load_css import load_css
 # PAGE CONFIG
 # ------------------------------------------------------------
 from utils.ui import setup_page, render_hero
-setup_page(page_title="Carbon Registry • Registry")
-render_hero(
-    title="⚖️ Carbon Registry",
-    subtitle="Create projects, log activities, and capture boundaries + assumptions.",
+
+setup_page(
+    page_title="Carbon Registry • Registry",
+    page_icon="⚖️",
+    layout="wide",
+    active_label="⚖️ Carbon Registry",
 )
 
+render_hero(
+    title="⚖️ Carbon Registry",
+    subtitle_html="Create projects, log activities, and capture boundaries + assumptions.",
+)
 
 # ------------------------------------------------------------
 # SETTINGS
