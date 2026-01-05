@@ -6,19 +6,29 @@ import uuid
 from datetime import datetime, date
 from pathlib import Path
 from typing import Optional, Dict, Any, Tuple
+import streamlit.components.v1 as components
 
-from utils.load_css import load_css
+# ------------------------------------------------------------
+# CSS (robust injection for Streamlit Cloud + multipage)
+# ------------------------------------------------------------
+def force_css_from_assets():
+    root = Path(__file__).resolve().parents[1]  # repo root
+    css_path = root / "assets" / "style.css"
+    if not css_path.exists():
+        st.warning(f"⚠️ style.css not found at: {css_path.as_posix()}")
+        return
+    css = css_path.read_text(encoding="utf-8")
+    st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+    components.html(f"<style>{css}</style>", height=0, width=0)
 
 # ------------------------------------------------------------
 # PAGE CONFIG
 # ------------------------------------------------------------
-from utils.ui import setup_page, render_hero
-setup_page(page_title="Carbon Registry • Registry")
-render_hero(
-    title="⚖️ Carbon Registry",
-    subtitle="Create projects, log activities, and capture boundaries + assumptions.",
-)
+st.set_page_config(page_title="Carbon Registry", page_icon="⚖️", layout="wide")
+force_css_from_assets()
 
+st.title("⚖️ Carbon Registry")
+st.caption("Foundation registry for boundaries, assumptions, activity logs, and transparent calculator demos (beta).")
 
 # ------------------------------------------------------------
 # SETTINGS
@@ -73,7 +83,6 @@ def ensure_schema() -> None:
     );
     """)
 
-    # NEW: foundational layer (minimal but powerful)
     db_exec("""
     CREATE TABLE IF NOT EXISTS project_foundations (
         project_id TEXT PRIMARY KEY,
