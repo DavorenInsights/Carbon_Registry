@@ -68,13 +68,13 @@ def render_hero(title: str, subtitle_html: str, tagline: str = APP_TAGLINE):
         f"""
         <div class="glass-box" style="padding: 26px 26px 14px 26px; margin-bottom: 16px;">
         <h1 style="margin:0; color:#86ffcf; text-shadow:0 0 10px #39ff9f;">
-            {title}
+        {title}
         </h1>
         <p style="font-size:18px; margin-top:10px; color:#b3ffdd;">
-            {subtitle_html}
+        {subtitle_html}
         </p>
         <p style="font-size:14px; margin-top:10px; color:#b3ffdd; opacity:0.85;">
-            Suggested flow: <b>{tagline}</b>
+        Suggested flow: <b>{tagline}</b>
         </p>
         </div>
         """,
