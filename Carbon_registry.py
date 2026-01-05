@@ -61,19 +61,19 @@ def force_css_from_assets():
 
 def render_hero_inline(title: str, subtitle_html: str):
     st.markdown(
-        f"""
-        <div style='padding: 28px 30px 14px 30px;'>
-        <h1 style='color:#86ffcf; text-shadow:0 0 10px #39ff9f; margin-bottom:6px;'>
-        {title}
-        </h1>
-        <p style='font-size:18px; color:#b3ffdd; margin-top:0;'>
-        {subtitle_html}
-        </p>
-        <p style='font-size:14px; color:#b3ffdd; opacity:0.85; margin-top:12px;'>
-        Suggested flow: <b>{APP_TAGLINE}</b>
-        </p>
-        </div>
-        """,
+    f"""
+    <div style='padding: 28px 30px 14px 30px;'>
+    <h1 style='color:#86ffcf; text-shadow:0 0 10px #39ff9f; margin-bottom:6px;'>
+    {title}
+    </h1>
+    <p style='font-size:18px; color:#b3ffdd; margin-top:0;'>
+    {subtitle_html}
+    </p>
+    <p style='font-size:14px; color:#b3ffdd; opacity:0.85; margin-top:12px;'>
+    Suggested flow: <b>{APP_TAGLINE}</b>
+    </p>
+    </div>
+    """,
         unsafe_allow_html=True,
     )
 
@@ -176,13 +176,13 @@ for idx, item in enumerate(NAV_ITEMS):
     with cols[idx]:
         st.markdown(
             f"""
-        <div class='glass-box'>
-        <div style='display:flex; justify-content:space-between; align-items:center; gap:12px;'>
-        <h3 style='margin:0;'>{item["card_title"]}</h3>
-        <span style='font-size:12px; opacity:0.8;'>{item["badge"]}</span>
-        </div>
-        <p style='margin-top:10px;'>{item["desc"]}</p>
-        </div>
+    <div class='glass-box'>
+    <div style='display:flex; justify-content:space-between; align-items:center; gap:12px;'>
+    <h3 style='margin:0;'>{item["card_title"]}</h3>
+    <span style='font-size:12px; opacity:0.8;'>{item["badge"]}</span>
+    </div>
+    <p style='margin-top:10px;'>{item["desc"]}</p>
+    </div>
             """,
             unsafe_allow_html=True,
         )
