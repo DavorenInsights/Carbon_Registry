@@ -1,8 +1,16 @@
+# Carbon_registry.py
+# ------------------------------------------------------------
+# Carbon Registry • Landing Page (clean, single-file, embedded theme)
+# - No external CSS dependency
+# - No render_hero() dependency (fixes your TypeError)
+# - Safe navigation via st.switch_page
+# ------------------------------------------------------------
+
 import streamlit as st
 
-# ---------------------------------------------------------
+# -----------------------------
 # CONFIG
-# ---------------------------------------------------------
+# -----------------------------
 APP_TITLE = "Carbon Registry"
 APP_ICON = "🌍"
 APP_VERSION = "v1.0 (foundation beta)"
@@ -25,132 +33,81 @@ NAV_ITEMS = [
     },
     {
         "card_title": "📘 Methodology Tools",
-        "desc": "Verra-aligned worked examples (demos, not audit outputs): VM0038, VMR0007, EV, hydrogen.",
+        "desc": "Verra-aligned worked examples (demo-style): VM0038, AM0124, VMR0007.",
         "button": "Open Methodology Examples",
-        "page": "pages/3_📘_Methodologies.py",  # keep exactly as your file name
+        "page": "pages/3_📘_Methodologies.py",  # keep exactly as your filename
         "badge": "Beta",
     },
 ]
 
-# ---------------------------------------------------------
-# PAGE CONFIG (ONLY ONCE, FIRST STREAMLIT CALL)
-# ---------------------------------------------------------
+# -----------------------------
+# PAGE CONFIG (must be first)
+# -----------------------------
 st.set_page_config(page_title=APP_TITLE, page_icon=APP_ICON, layout="wide")
 
 
-def safe_switch_page(page_path: str) -> None:
-    """Switch pages with a friendly error if the target can't be opened."""
-    try:
-        st.switch_page(page_path)
-    except Exception as e:
-        st.error("Navigation failed: page not found or renamed.")
-        st.caption(f"Expected file: {page_path}")
-        st.caption(f"Details: {e}")
-
-
+# -----------------------------
+# THEME (embedded CSS)
+# -----------------------------
 def inject_css() -> None:
     css = r"""
-/* =========================
-   THEME VARIABLES
-========================= */
 :root{
-  --bg-dark:#020c08;
+  --bg:#020c08;
   --panel: rgba(10,25,15,.45);
-  --panel-2: rgba(10,25,15,.65);
+  --panel2: rgba(10,25,15,.60);
   --stroke: rgba(57,255,159,.20);
 
-  --green-neon:#39ff9f;
-  --green-mid:#00b46f;
-  --green-soft:#86ffcf;
+  --neon:#39ff9f;
+  --mid:#00b46f;
+  --soft:#86ffcf;
 
   --text:#e8fff2;
-  --text-dim:#b3ffdd;
+  --dim:#b3ffdd;
 
-  --radius:18px;
+  --r:18px;
   --shadow: 0 0 20px rgba(0,255,138,.12);
   --glow: 0 0 12px rgba(57,255,159,.35);
 }
 
-/* =========================
-   PAGE BACKGROUND
-========================= */
-html, body {
-  background: var(--bg-dark) !important;
+html, body, .stApp{
+  background: var(--bg) !important;
   color: var(--text) !important;
   font-family: "Segoe UI", Roboto, sans-serif !important;
 }
-.stApp{
-  background: var(--bg-dark) !important;
-}
 
-/* Streamlit main container width/padding */
-section.main > div{
-  padding-top: 1.2rem;
-}
-
-/* =========================
-   TYPOGRAPHY (SAFE)
-   (DO NOT GLOBAL-STYLE div)
-========================= */
-h1, h2, h3, h4, h5{
-  color: var(--green-soft) !important;
-  text-shadow: 0 0 8px rgba(57,255,159,.18);
-  letter-spacing: .4px;
-}
-p, li{
-  color: var(--text-dim) !important;
-}
-
-/* Streamlit default text blocks */
-[data-testid="stMarkdownContainer"] p,
-[data-testid="stMarkdownContainer"] li,
-[data-testid="stText"] {
-  color: var(--text-dim) !important;
-}
-
-/* =========================
-   SIDEBAR
-========================= */
+/* Sidebar */
 section[data-testid="stSidebar"]{
   background: rgba(5,20,10,.90) !important;
   backdrop-filter: blur(12px);
   border-right: 1px solid rgba(57,255,159,.12);
   box-shadow: 4px 0 20px rgba(0,255,138,.08);
 }
-section[data-testid="stSidebar"] *{
-  color: var(--text-dim) !important;
-}
+section[data-testid="stSidebar"] *{ color: var(--dim) !important; }
 section[data-testid="stSidebar"] h1,
 section[data-testid="stSidebar"] h2,
-section[data-testid="stSidebar"] h3{
-  color: var(--green-soft) !important;
-}
+section[data-testid="stSidebar"] h3{ color: var(--soft) !important; }
 
-/* =========================
-   BUTTONS
-========================= */
+/* Buttons */
 .stButton>button,
 button[kind="primary"],
 .stDownloadButton button{
-  background: var(--green-mid) !important;
+  background: var(--mid) !important;
   color: #00120a !important;
   border: none !important;
   font-weight: 700 !important;
-  border-radius: var(--radius) !important;
+  border-radius: var(--r) !important;
   box-shadow: var(--glow) !important;
   transition: .18s ease-in-out !important;
 }
 .stButton>button:hover,
 button[kind="primary"]:hover,
 .stDownloadButton button:hover{
-  background: var(--green-neon) !important;
+  background: var(--neon) !important;
   transform: translateY(-2px);
   box-shadow: 0 0 18px rgba(57,255,159,.65) !important;
 }
 
-/* =========================
-   INPUTS (TEXT/NUMBER/SELECT)
-========================= */
+/* Inputs */
 [data-testid="stTextInput"] input,
 [data-testid="stNumberInput"] input,
 [data-testid="stTextArea"] textarea,
@@ -159,70 +116,49 @@ button[kind="primary"]:hover,
   background: rgba(5,20,10,.55) !important;
   color: var(--text) !important;
   border: 1px solid rgba(57,255,159,.22) !important;
-  border-radius: var(--radius) !important;
+  border-radius: var(--r) !important;
 }
 
-/* Labels */
+/* Widget labels */
 [data-testid="stWidgetLabel"] p{
-  color: var(--text-dim) !important;
+  color: var(--dim) !important;
   font-weight: 600 !important;
 }
 
-/* Focus */
-[data-testid="stTextInput"] input:focus,
-[data-testid="stNumberInput"] input:focus,
-[data-testid="stTextArea"] textarea:focus{
-  outline: none !important;
-  border-color: rgba(57,255,159,.55) !important;
-  box-shadow: var(--glow) !important;
-}
-
-/* =========================
-   EXPANDERS
-========================= */
+/* Expanders */
 [data-testid="stExpander"]{
   border: 1px solid rgba(57,255,159,.14) !important;
-  border-radius: var(--radius) !important;
-  background: rgba(10,25,15,.25) !important;
+  border-radius: var(--r) !important;
+  background: rgba(10,25,15,.22) !important;
 }
 [data-testid="stExpander"] summary{
   background: rgba(10,30,15,.55) !important;
-  border-radius: var(--radius) !important;
+  border-radius: var(--r) !important;
   border: 1px solid rgba(57,255,159,.14) !important;
 }
-[data-testid="stExpander"] summary *{
-  color: var(--green-soft) !important;
-}
+[data-testid="stExpander"] summary *{ color: var(--soft) !important; }
 
-/* =========================
-   DATAFRAMES / TABLES
-========================= */
+/* Dataframes */
 [data-testid="stDataFrame"]{
   background: rgba(10,25,15,.25) !important;
   border: 1px solid rgba(57,255,159,.14) !important;
-  border-radius: var(--radius) !important;
+  border-radius: var(--r) !important;
   box-shadow: var(--shadow) !important;
   overflow: hidden;
 }
-[data-testid="stDataFrame"] *{
-  color: var(--text) !important;
-}
+[data-testid="stDataFrame"] *{ color: var(--text) !important; }
 
-/* =========================
-   ALERTS
-========================= */
+/* Alerts */
 .stAlert{
-  border-radius: var(--radius) !important;
+  border-radius: var(--r) !important;
   border: 1px solid rgba(57,255,159,.14) !important;
   background: rgba(0,255,138,.07) !important;
 }
 .stSuccess, .stInfo, .stWarning, .stError{
-  border-left: 4px solid var(--green-neon) !important;
+  border-left: 4px solid var(--neon) !important;
 }
 
-/* =========================
-   HR
-========================= */
+/* HR */
 hr{
   border: none;
   height: 1px;
@@ -230,21 +166,18 @@ hr{
     rgba(57,255,159,0) 0%,
     rgba(57,255,159,.55) 50%,
     rgba(57,255,159,0) 100%);
-  margin: 24px 0;
+  margin: 22px 0;
 }
 
-/* =========================
-   YOUR CUSTOM HTML CARDS
-========================= */
-.glass-box, .card{
-  border-radius: var(--radius);
-  background: rgba(10,25,15,.45);
-  border: 1px solid rgba(57,255,159,.20);
+/* Custom cards */
+.di-card{
+  border-radius: var(--r);
+  background: var(--panel);
+  border: 1px solid var(--stroke);
   box-shadow: var(--shadow);
   backdrop-filter: blur(16px);
+  padding: 22px;
 }
-.glass-box{ padding: 25px; }
-.card{ padding: 20px; background: rgba(10,25,15,.55); }
 
 /* Hide Streamlit footer */
 footer{ visibility:hidden !important; }
@@ -252,28 +185,65 @@ footer{ visibility:hidden !important; }
     st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
 
-
-def render_hero_inline(title: str, subtitle_html: str) -> None:
+# -----------------------------
+# HERO (embedded, inline-safe)
+# -----------------------------
+def render_hero(title: str, subtitle_html: str) -> None:
     st.markdown(
         f"""
-<div class="glass-box" style="padding: 26px 26px 14px 26px; margin-bottom: 14px;">
+<div style="
+  border-radius:18px;
+  background: rgba(10,25,15,.45);
+  border: 1px solid rgba(57,255,159,.20);
+  box-shadow: 0 0 20px rgba(0,255,138,.12);
+  backdrop-filter: blur(16px);
+  padding: 26px 26px 14px 26px;
+  margin-bottom: 14px;
+">
+<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+<div style="min-width:260px;">
 <h1 style="margin:0; color:#86ffcf; text-shadow:0 0 10px #39ff9f;">{title}</h1>
-<p style="font-size:18px; margin-top:10px; color:#b3ffdd;">{subtitle_html}</p>
-<p style="font-size:14px; margin-top:10px; color:#b3ffdd; opacity:0.85;">
+<p style="font-size:18px; margin:10px 0 0 0; color:#b3ffdd;">{subtitle_html}</p>
+<p style="font-size:14px; margin:10px 0 0 0; color:#b3ffdd; opacity:0.85;">
 Suggested flow: <b>{APP_TAGLINE}</b>
 </p>
 </div>
-        """,
+
+<div style="
+border-radius:14px;
+border: 1px solid rgba(57,255,159,.18);
+background: rgba(2,12,8,.35);
+padding: 12px 14px;
+min-width:220px;
+    ">
+<div style="color:#86ffcf; font-weight:700; margin-bottom:6px;">Build status</div>
+<div style="color:#b3ffdd; font-size:13px;">Version: <b>{APP_VERSION}</b></div>
+<div style="color:#b3ffdd; font-size:13px; margin-top:4px;">Mode: Foundation beta</div>
+</div>
+</div>
+</div>
+""",
         unsafe_allow_html=True,
     )
 
 
-# Inject theme
+# -----------------------------
+# NAVIGATION
+# -----------------------------
+def safe_switch_page(page_path: str) -> None:
+    try:
+        st.switch_page(page_path)
+    except Exception as e:
+        st.error("Navigation failed: page not found or renamed.")
+        st.caption(f"Expected file: {page_path}")
+        st.caption(f"Details: {e}")
+
+
+# -----------------------------
+# RENDER
+# -----------------------------
 inject_css()
 
-# ---------------------------------------------------------
-# SIDEBAR
-# ---------------------------------------------------------
 with st.sidebar:
     st.markdown(f"## {APP_ICON} {APP_TITLE}")
     st.caption(APP_VERSION)
@@ -292,15 +262,8 @@ with st.sidebar:
         st.write("3) Run **calculator demos** with transparent factors.")
         st.write("4) Export notes/results for review.")
 
-    with st.expander("What’s new"):
-        st.write("- Home hub repositioned as foundation tool (not audit-grade MRV)")
-        st.write("- Quick Actions enabled (roadmap/docs/bug/what’s new)")
-        st.write("- Clearer module descriptions + disclaimers")
 
-# ---------------------------------------------------------
-# HERO
-# ---------------------------------------------------------
-render_hero_inline(
+render_hero(
     title="🌍 Carbon Registry & Methods Explorer",
     subtitle_html=(
         "A transparent workspace for <b>boundaries</b>, <b>assumptions</b>, activity logs, and calculator demos."
@@ -308,13 +271,11 @@ render_hero_inline(
     ),
 )
 
-# ---------------------------------------------------------
-# QUICK ACTIONS
-# ---------------------------------------------------------
+# Quick actions
 qa1, qa2, qa3, qa4 = st.columns(4)
 
 with qa1:
-    if st.button("📌 Roadmap", key="qa_roadmap", use_container_width=True):
+    if st.button("📌 Roadmap", use_container_width=True):
         st.info(
             "Roadmap (near-term)\n"
             "- Stabilize Registry data model (projects, activities, assumptions)\n"
@@ -325,7 +286,7 @@ with qa1:
         )
 
 with qa2:
-    if st.button("📄 Docs", key="qa_docs", use_container_width=True):
+    if st.button("📄 Docs", use_container_width=True):
         st.info(
             "Docs (how to use)\n"
             "1) Create a project and define boundaries\n"
@@ -335,7 +296,7 @@ with qa2:
         )
 
 with qa3:
-    if st.button("🐞 Report Bug", key="qa_bug", use_container_width=True):
+    if st.button("🐞 Report Bug", use_container_width=True):
         st.warning("Bug reporting (temporary): copy/paste this into your notes or issue tracker.")
         st.code(
             f"App: {APP_TITLE}\nVersion: {APP_VERSION}\nPage: Home\nStreamlit: {st.__version__}",
@@ -343,7 +304,7 @@ with qa3:
         )
 
 with qa4:
-    if st.button("✨ What’s New", key="qa_whatsnew", use_container_width=True):
+    if st.button("✨ What’s New", use_container_width=True):
         st.success(
             "What’s new\n"
             "- Home hub repositioned as foundation tool\n"
@@ -353,23 +314,20 @@ with qa4:
 
 st.write("")
 
-# ---------------------------------------------------------
-# NAV CARDS
-# ---------------------------------------------------------
+# Nav cards
 cols = st.columns(3)
-
 for idx, item in enumerate(NAV_ITEMS):
     with cols[idx]:
         st.markdown(
             f"""
-<div class='glass-box'>
-<div style='display:flex; justify-content:space-between; align-items:center; gap:12px;'>
-<h3 style='margin:0;'>{item["card_title"]}</h3>
-<span style='font-size:12px; opacity:0.8;'>{item["badge"]}</span>
+<div class="di-card">
+<div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+<h3 style="margin:0; color:#86ffcf;">{item["card_title"]}</h3>
+<span style="font-size:12px; opacity:0.85; color:#b3ffdd;">{item["badge"]}</span>
 </div>
-<p style='margin-top:10px;'>{item["desc"]}</p>
+<p style="margin-top:10px; color:#b3ffdd;">{item["desc"]}</p>
 </div>
-            """,
+""",
             unsafe_allow_html=True,
         )
         if st.button(item["button"], key=f"nav_btn_{idx}", use_container_width=True):
@@ -381,3 +339,4 @@ st.caption(
     "Validate inputs/results against the applicable standard/methodology and verified datasets."
 )
 st.caption(f"{APP_TITLE} • {APP_VERSION}")
+
