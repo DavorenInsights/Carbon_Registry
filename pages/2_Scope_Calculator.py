@@ -31,11 +31,13 @@ from utils.load_css import load_css
 # ------------------------------------------------------------
 from utils.ui import setup_page, render_hero
 
-setup_page(page_title="Carbon Registry • Scopes", page_icon="📊", layout="wide")
+setup_page(
+    page_title="Carbon Registry • Scopes",
+    page_icon="📊",
+    layout="wide",
+    active_label="📊 Scope 1 / 2 / 3 Calculator",
+)
 
-render_hero(
-    title="📊 Scope 1 / 2 / 3 Calculator",
-    subtitle_html="Baseline estimates across scopes with transparent factors + assumptions.",
 )
 
 
