@@ -32,6 +32,11 @@ NAV_ITEMS = [
     },
 ]
 
+# ---------------------------------------------------------
+# PAGE CONFIG (ONLY ONCE, FIRST STREAMLIT CALL)
+# ---------------------------------------------------------
+st.set_page_config(page_title=APP_TITLE, page_icon=APP_ICON, layout="wide")
+
 
 def safe_switch_page(page_path: str) -> None:
     """Switch pages with a friendly error if the target can't be opened."""
@@ -46,9 +51,6 @@ def safe_switch_page(page_path: str) -> None:
 def inject_css() -> None:
     """Embedded CSS injection (no external file dependency)."""
     css = r"""
-/* ============================================================
-   GLOBAL VARIABLES
-============================================================ */
 :root {
     --bg-dark: #020c08;
     --bg-card: rgba(10, 25, 15, 0.55);
@@ -68,9 +70,6 @@ def inject_css() -> None:
     --transition: 0.25s ease-in-out;
 }
 
-/* ============================================================
-   BASE
-============================================================ */
 html, body {
     margin: 0 !important;
     padding: 0 !important;
@@ -93,9 +92,6 @@ p, label, span, div {
     color: var(--text-mid) !important;
 }
 
-/* ============================================================
-   SIDEBAR
-============================================================ */
 section[data-testid="stSidebar"] {
     background: rgba(5, 20, 10, 0.9) !important;
     backdrop-filter: blur(12px);
@@ -113,9 +109,6 @@ section[data-testid="stSidebar"] div {
     color: var(--green-soft) !important;
 }
 
-/* ============================================================
-   BUTTONS
-============================================================ */
 .stButton > button,
 button[kind="primary"],
 .stDownloadButton button {
@@ -136,11 +129,8 @@ button[kind="primary"]:hover,
     box-shadow: 0 0 20px rgba(57, 255, 159, 0.7) !important;
 }
 
-/* ============================================================
-   IMPORTANT: DO NOT STYLE .stMarkdown AS A CARD
-============================================================ */
+/* IMPORTANT: DO NOT STYLE .stMarkdown AS A CARD */
 
-/* Utility cards */
 .card, .glass-box {
     border-radius: var(--radius);
     border: 1px solid rgba(57, 255, 159, 0.25);
@@ -158,7 +148,6 @@ button[kind="primary"]:hover,
     padding: 25px;
 }
 
-/* Inputs */
 input, textarea, select {
     background: rgba(5, 20, 10, 0.5) !important;
     border: 1px solid rgba(57, 255, 159, 0.25) !important;
@@ -171,7 +160,6 @@ input:focus, textarea:focus, select:focus {
     box-shadow: var(--border-glow) !important;
 }
 
-/* Alerts */
 .stSuccess, .stWarning, .stInfo, .stError {
     padding: 12px 18px !important;
     border-radius: var(--radius) !important;
@@ -179,7 +167,6 @@ input:focus, textarea:focus, select:focus {
     background: rgba(0, 255, 138, 0.08) !important;
 }
 
-/* Expanders (updated selector) */
 div[data-testid="stExpander"] summary {
     background: rgba(10, 30, 15, 0.6) !important;
     color: var(--green-soft) !important;
@@ -191,7 +178,6 @@ div[data-testid="stExpander"] summary:hover {
     border-color: rgba(57, 255, 159, 0.35) !important;
 }
 
-/* Tables */
 div[data-testid="stDataFrame"] * {
     color: var(--text-light) !important;
 }
@@ -201,7 +187,6 @@ table, thead, tbody, tr, th, td {
     border-color: rgba(57, 255, 159, 0.18) !important;
 }
 
-/* HR */
 hr {
     border: none;
     height: 1px;
@@ -214,7 +199,6 @@ hr {
     margin: 25px 0;
 }
 
-/* Footer hide */
 footer { visibility: hidden !important; }
 """
     st.markdown(f"<style id='di-theme'>{css}</style>", unsafe_allow_html=True)
@@ -225,9 +209,7 @@ def render_hero_inline(title: str, subtitle_html: str) -> None:
         f"""
 <div class="glass-box" style="padding: 26px 26px 14px 26px; margin-bottom: 14px;">
 <h1 style="margin:0; color:#86ffcf; text-shadow:0 0 10px #39ff9f;">{title}</h1>
-<p style="font-size:18px; margin-top:10px; color:#b3ffdd;">
-{subtitle_html}
-</p>
+<p style="font-size:18px; margin-top:10px; color:#b3ffdd;">{subtitle_html}</p>
 <p style="font-size:14px; margin-top:10px; color:#b3ffdd; opacity:0.85;">
 Suggested flow: <b>{APP_TAGLINE}</b>
 </p>
@@ -237,10 +219,7 @@ Suggested flow: <b>{APP_TAGLINE}</b>
     )
 
 
-# ---------------------------------------------------------
-# PAGE SETUP
-# ---------------------------------------------------------
-st.set_page_config(page_title=APP_TITLE, page_icon=APP_ICON, layout="wide")
+# Inject theme
 inject_css()
 
 # ---------------------------------------------------------
@@ -266,7 +245,7 @@ with st.sidebar:
 
     with st.expander("What’s new"):
         st.write("- Home hub repositioned as foundation tool (not audit-grade MRV)")
-        st.write("- Quick actions enabled (roadmap/docs/bug/what’s new)")
+        st.write("- Quick Actions enabled (roadmap/docs/bug/what’s new)")
         st.write("- Clearer module descriptions + disclaimers")
 
 # ---------------------------------------------------------
@@ -347,9 +326,6 @@ for idx, item in enumerate(NAV_ITEMS):
         if st.button(item["button"], key=f"nav_btn_{idx}", use_container_width=True):
             safe_switch_page(item["page"])
 
-# ---------------------------------------------------------
-# FOOTER
-# ---------------------------------------------------------
 st.divider()
 st.caption(
     "Disclaimer: Beta tool for learning and analysis — not audit-ready. "
