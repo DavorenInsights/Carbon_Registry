@@ -49,159 +49,208 @@ def safe_switch_page(page_path: str) -> None:
 
 
 def inject_css() -> None:
-    """Embedded CSS injection (no external file dependency)."""
     css = r"""
-:root {
-    --bg-dark: #020c08;
-    --bg-card: rgba(10, 25, 15, 0.55);
-    --bg-card-strong: rgba(10, 25, 15, 0.85);
+/* =========================
+   THEME VARIABLES
+========================= */
+:root{
+  --bg-dark:#020c08;
+  --panel: rgba(10,25,15,.45);
+  --panel-2: rgba(10,25,15,.65);
+  --stroke: rgba(57,255,159,.20);
 
-    --green-neon: #39ff9f;
-    --green-mid: #00b46f;
-    --green-soft: #86ffcf;
+  --green-neon:#39ff9f;
+  --green-mid:#00b46f;
+  --green-soft:#86ffcf;
 
-    --text-light: #e8fff2;
-    --text-mid: #b3ffdd;
+  --text:#e8fff2;
+  --text-dim:#b3ffdd;
 
-    --border-glow: 0 0 12px rgba(57, 255, 159, 0.45);
-    --shadow-card: 0 0 20px rgba(0, 255, 138, 0.15);
-
-    --radius: 18px;
-    --transition: 0.25s ease-in-out;
+  --radius:18px;
+  --shadow: 0 0 20px rgba(0,255,138,.12);
+  --glow: 0 0 12px rgba(57,255,159,.35);
 }
 
+/* =========================
+   PAGE BACKGROUND
+========================= */
 html, body {
-    margin: 0 !important;
-    padding: 0 !important;
-    background: var(--bg-dark) !important;
-    font-family: "Segoe UI", Roboto, sans-serif !important;
-    color: var(--text-light) !important;
+  background: var(--bg-dark) !important;
+  color: var(--text) !important;
+  font-family: "Segoe UI", Roboto, sans-serif !important;
+}
+.stApp{
+  background: var(--bg-dark) !important;
 }
 
-.stApp {
-    background: var(--bg-dark) !important;
+/* Streamlit main container width/padding */
+section.main > div{
+  padding-top: 1.2rem;
 }
 
-h1, h2, h3, h4 {
-    color: var(--green-soft) !important;
-    letter-spacing: 0.6px;
-    text-shadow: 0 0 8px rgba(57, 255, 159, 0.25);
+/* =========================
+   TYPOGRAPHY (SAFE)
+   (DO NOT GLOBAL-STYLE div)
+========================= */
+h1, h2, h3, h4, h5{
+  color: var(--green-soft) !important;
+  text-shadow: 0 0 8px rgba(57,255,159,.18);
+  letter-spacing: .4px;
+}
+p, li{
+  color: var(--text-dim) !important;
 }
 
-p, label, span, div {
-    color: var(--text-mid) !important;
+/* Streamlit default text blocks */
+[data-testid="stMarkdownContainer"] p,
+[data-testid="stMarkdownContainer"] li,
+[data-testid="stText"] {
+  color: var(--text-dim) !important;
 }
 
-section[data-testid="stSidebar"] {
-    background: rgba(5, 20, 10, 0.9) !important;
-    backdrop-filter: blur(12px);
-    border-right: 1px solid rgba(57, 255, 159, 0.15);
-    box-shadow: 4px 0 20px rgba(0, 255, 138, 0.08);
+/* =========================
+   SIDEBAR
+========================= */
+section[data-testid="stSidebar"]{
+  background: rgba(5,20,10,.90) !important;
+  backdrop-filter: blur(12px);
+  border-right: 1px solid rgba(57,255,159,.12);
+  box-shadow: 4px 0 20px rgba(0,255,138,.08);
 }
-
+section[data-testid="stSidebar"] *{
+  color: var(--text-dim) !important;
+}
 section[data-testid="stSidebar"] h1,
 section[data-testid="stSidebar"] h2,
-section[data-testid="stSidebar"] h3,
-section[data-testid="stSidebar"] p,
-section[data-testid="stSidebar"] label,
-section[data-testid="stSidebar"] span,
-section[data-testid="stSidebar"] div {
-    color: var(--green-soft) !important;
+section[data-testid="stSidebar"] h3{
+  color: var(--green-soft) !important;
 }
 
-.stButton > button,
+/* =========================
+   BUTTONS
+========================= */
+.stButton>button,
 button[kind="primary"],
-.stDownloadButton button {
-    background: var(--green-mid) !important;
-    color: black !important;
-    font-weight: 700 !important;
-    border-radius: var(--radius) !important;
-    border: none !important;
-    box-shadow: var(--border-glow) !important;
-    transition: var(--transition) !important;
+.stDownloadButton button{
+  background: var(--green-mid) !important;
+  color: #00120a !important;
+  border: none !important;
+  font-weight: 700 !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--glow) !important;
+  transition: .18s ease-in-out !important;
 }
-
-.stButton > button:hover,
+.stButton>button:hover,
 button[kind="primary"]:hover,
-.stDownloadButton button:hover {
-    background: var(--green-neon) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 0 20px rgba(57, 255, 159, 0.7) !important;
+.stDownloadButton button:hover{
+  background: var(--green-neon) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 0 18px rgba(57,255,159,.65) !important;
 }
 
-/* IMPORTANT: DO NOT STYLE .stMarkdown AS A CARD */
-
-.card, .glass-box {
-    border-radius: var(--radius);
-    border: 1px solid rgba(57, 255, 159, 0.25);
-    box-shadow: var(--shadow-card);
-    backdrop-filter: blur(30px);
+/* =========================
+   INPUTS (TEXT/NUMBER/SELECT)
+========================= */
+[data-testid="stTextInput"] input,
+[data-testid="stNumberInput"] input,
+[data-testid="stTextArea"] textarea,
+[data-testid="stSelectbox"] div[role="combobox"],
+[data-testid="stMultiSelect"] div[role="combobox"]{
+  background: rgba(5,20,10,.55) !important;
+  color: var(--text) !important;
+  border: 1px solid rgba(57,255,159,.22) !important;
+  border-radius: var(--radius) !important;
 }
 
-.card {
-    background: var(--bg-card);
-    padding: 20px;
+/* Labels */
+[data-testid="stWidgetLabel"] p{
+  color: var(--text-dim) !important;
+  font-weight: 600 !important;
 }
 
-.glass-box {
-    background: rgba(10, 25, 15, 0.45);
-    padding: 25px;
+/* Focus */
+[data-testid="stTextInput"] input:focus,
+[data-testid="stNumberInput"] input:focus,
+[data-testid="stTextArea"] textarea:focus{
+  outline: none !important;
+  border-color: rgba(57,255,159,.55) !important;
+  box-shadow: var(--glow) !important;
 }
 
-input, textarea, select {
-    background: rgba(5, 20, 10, 0.5) !important;
-    border: 1px solid rgba(57, 255, 159, 0.25) !important;
-    border-radius: var(--radius) !important;
-    color: var(--text-light) !important;
+/* =========================
+   EXPANDERS
+========================= */
+[data-testid="stExpander"]{
+  border: 1px solid rgba(57,255,159,.14) !important;
+  border-radius: var(--radius) !important;
+  background: rgba(10,25,15,.25) !important;
+}
+[data-testid="stExpander"] summary{
+  background: rgba(10,30,15,.55) !important;
+  border-radius: var(--radius) !important;
+  border: 1px solid rgba(57,255,159,.14) !important;
+}
+[data-testid="stExpander"] summary *{
+  color: var(--green-soft) !important;
 }
 
-input:focus, textarea:focus, select:focus {
-    border-color: var(--green-neon) !important;
-    box-shadow: var(--border-glow) !important;
+/* =========================
+   DATAFRAMES / TABLES
+========================= */
+[data-testid="stDataFrame"]{
+  background: rgba(10,25,15,.25) !important;
+  border: 1px solid rgba(57,255,159,.14) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow) !important;
+  overflow: hidden;
+}
+[data-testid="stDataFrame"] *{
+  color: var(--text) !important;
 }
 
-.stSuccess, .stWarning, .stInfo, .stError {
-    padding: 12px 18px !important;
-    border-radius: var(--radius) !important;
-    border-left: 4px solid var(--green-neon) !important;
-    background: rgba(0, 255, 138, 0.08) !important;
+/* =========================
+   ALERTS
+========================= */
+.stAlert{
+  border-radius: var(--radius) !important;
+  border: 1px solid rgba(57,255,159,.14) !important;
+  background: rgba(0,255,138,.07) !important;
+}
+.stSuccess, .stInfo, .stWarning, .stError{
+  border-left: 4px solid var(--green-neon) !important;
 }
 
-div[data-testid="stExpander"] summary {
-    background: rgba(10, 30, 15, 0.6) !important;
-    color: var(--green-soft) !important;
-    border-radius: var(--radius) !important;
-    border: 1px solid rgba(57, 255, 159, 0.18) !important;
+/* =========================
+   HR
+========================= */
+hr{
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg,
+    rgba(57,255,159,0) 0%,
+    rgba(57,255,159,.55) 50%,
+    rgba(57,255,159,0) 100%);
+  margin: 24px 0;
 }
 
-div[data-testid="stExpander"] summary:hover {
-    border-color: rgba(57, 255, 159, 0.35) !important;
+/* =========================
+   YOUR CUSTOM HTML CARDS
+========================= */
+.glass-box, .card{
+  border-radius: var(--radius);
+  background: rgba(10,25,15,.45);
+  border: 1px solid rgba(57,255,159,.20);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(16px);
 }
+.glass-box{ padding: 25px; }
+.card{ padding: 20px; background: rgba(10,25,15,.55); }
 
-div[data-testid="stDataFrame"] * {
-    color: var(--text-light) !important;
-}
-
-table, thead, tbody, tr, th, td {
-    background: rgba(10, 30, 15, 0.22) !important;
-    border-color: rgba(57, 255, 159, 0.18) !important;
-}
-
-hr {
-    border: none;
-    height: 1px;
-    background: linear-gradient(
-        90deg,
-        rgba(57, 255, 159, 0) 0%,
-        rgba(57, 255, 159, 0.6) 50%,
-        rgba(57, 255, 159, 0) 100%
-    );
-    margin: 25px 0;
-}
-
-footer { visibility: hidden !important; }
+/* Hide Streamlit footer */
+footer{ visibility:hidden !important; }
 """
-    st.markdown(f"<style id='di-theme'>{css}</style>", unsafe_allow_html=True)
+    st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+
 
 
 def render_hero_inline(title: str, subtitle_html: str) -> None:
