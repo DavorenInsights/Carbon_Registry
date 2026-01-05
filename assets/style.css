@@ -291,6 +291,19 @@ hr, [data-testid="stDivider"] {
     color: var(--text-dim) !important;
 }
 
+/* Small badge/pill for inline labels */
+.pill-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(57, 255, 159, 0.10);
+    border: 1px solid rgba(57, 255, 159, 0.22);
+    color: var(--text-mid);
+    font-size: 12px;
+    line-height: 1;
+}
+
+
 /* ============================================================
    FOOTER / MENU (optional)
 ============================================================ */
